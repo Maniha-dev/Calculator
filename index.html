@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Splyt — Tip Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="glow glow-1" aria-hidden="true"></div>
+  <div class="glow glow-2" aria-hidden="true"></div>
+
+  <main class="app" role="main">
+    <header class="app-header">
+      <div class="wordmark">
+        <span class="wordmark-s">S</span>plyt
+      </div>
+      <p class="tagline">Split the bill. Not the friendship.</p>
+    </header>
+
+    <div class="card-grid">
+      <!-- INPUT CARD -->
+      <section class="card card-inputs" aria-label="Bill details">
+
+        <!-- Bill Amount -->
+        <div class="field" id="field-bill">
+          <label class="field-label" for="bill-input">
+            Bill amount
+            <span class="currency-badge">Rs</span>
+          </label>
+          <div class="input-wrap" id="bill-wrap">
+            <span class="input-prefix" aria-hidden="true">Rs</span>
+            <input
+              id="bill-input"
+              type="text"
+              inputmode="decimal"
+              placeholder="0.00"
+              autocomplete="off"
+              aria-describedby="bill-error"
+              aria-invalid="false"
+            />
+          </div>
+          <p class="field-error" id="bill-error" role="alert" aria-live="polite"></p>
+        </div>
+
+        <!-- Tip Percentage -->
+        <div class="field" id="field-tip">
+          <label class="field-label" for="tip-custom">Tip percentage</label>
+          <div class="tip-presets" role="group" aria-label="Tip presets">
+            <button class="preset-btn" data-tip="10" type="button" aria-pressed="false">10%</button>
+            <button class="preset-btn" data-tip="15" type="button" aria-pressed="false">15%</button>
+            <button class="preset-btn" data-tip="18" type="button" aria-pressed="false">18%</button>
+            <button class="preset-btn" data-tip="20" type="button" aria-pressed="false">20%</button>
+            <button class="preset-btn" data-tip="25" type="button" aria-pressed="false">25%</button>
+          </div>
+          <div class="input-wrap custom-tip-wrap" id="tip-wrap">
+            <input
+              id="tip-custom"
+              type="text"
+              inputmode="decimal"
+              placeholder="Custom %"
+              autocomplete="off"
+              aria-label="Custom tip percentage"
+              aria-describedby="tip-error"
+              aria-invalid="false"
+            />
+            <span class="input-suffix" aria-hidden="true">%</span>
+          </div>
+          <p class="field-error" id="tip-error" role="alert" aria-live="polite"></p>
+        </div>
+
+        <!-- Number of People -->
+        <div class="field" id="field-people">
+          <label class="field-label" for="people-input">Number of people</label>
+          <div class="people-row">
+            <button class="stepper-btn" id="people-dec" type="button" aria-label="Decrease people by 1" tabindex="0">−</button>
+            <div class="input-wrap people-wrap" id="people-wrap">
+              <input
+                id="people-input"
+                type="text"
+                inputmode="numeric"
+                placeholder="1"
+                autocomplete="off"
+                aria-describedby="people-error"
+                aria-invalid="false"
+              />
+            </div>
+            <button class="stepper-btn" id="people-inc" type="button" aria-label="Increase people by 1" tabindex="0">+</button>
+          </div>
+          <p class="field-error" id="people-error" role="alert" aria-live="polite"></p>
+        </div>
+
+        <button class="reset-btn" id="reset-btn" type="button" aria-label="Reset all fields">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M1 7C1 3.686 3.686 1 7 1c2.09 0 3.94 1.01 5.1 2.566M13 7c0 3.314-2.686 6-6 6a5.986 5.986 0 01-5.1-2.566" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M10.5 3l1.6-.434L12.5 1M3.5 11l-1.6.434L1.5 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Reset
+        </button>
+      </section>
+
+      <!-- OUTPUT CARD -->
+      <section class="card card-results" aria-label="Calculation results" aria-live="polite" aria-atomic="true">
+        <div class="result-rows">
+
+          <div class="result-row" id="row-tip">
+            <span class="result-label">Tip amount</span>
+            <span class="result-value" id="out-tip" aria-label="Tip amount">
+              <span class="result-currency">Rs</span
+              ><span class="result-num">—</span>
+            </span>
+          </div>
+
+          <div class="result-row" id="row-total">
+            <span class="result-label">Grand total</span>
+            <span class="result-value" id="out-total" aria-label="Grand total">
+              <span class="result-currency">Rs</span
+              ><span class="result-num">—</span>
+            </span>
+          </div>
+
+          <div class="result-divider" aria-hidden="true"></div>
+
+          <div class="result-row result-row-hero" id="row-per-person">
+            <div class="result-label-group">
+              <span class="result-label">Per person</span>
+              <span class="result-sublabel" id="per-person-note"></span>
+            </div>
+            <span class="result-value result-value-hero" id="out-per-person" aria-label="Amount per person">
+              <span class="result-currency">Rs</span
+              ><span class="result-num">—</span>
+            </span>
+          </div>
+
+        </div>
+
+        <p class="rounding-note" aria-live="polite" id="rounding-note"></p>
+
+        <div class="result-state-empty" id="result-empty" aria-hidden="false">
+          <div class="empty-icon" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="20" cy="20" r="18.5" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <path d="M14 20h12M20 14v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <p>Enter bill details<br/>to see the split</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
